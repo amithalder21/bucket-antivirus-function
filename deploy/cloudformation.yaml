@@ -23,6 +23,7 @@
       Type: String
       Description: Name of the SNS ARN.
       Default: "<SNS-ARN>"
+      AllowedPattern : ".+"
 
   Conditions:
     publicBucket: !Equals [ !Ref AVBucketType, "public" ]
@@ -269,6 +270,7 @@
         Environment:
           Variables:
             AV_DEFINITION_S3_BUCKET: !Ref S3BucketAVDefinitions
+            AV_STATUS_SNS_ARN: !Ref SnsName
         Tags:
           - Key: Service
             Value: bucket-antivirus
