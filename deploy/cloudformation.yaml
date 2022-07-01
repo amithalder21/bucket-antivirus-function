@@ -18,6 +18,11 @@
       Description: Name of the source bucket whose objects will be scanned. If more than one source bucket, the others will have to be manually added to the AV Scanner Policy after creation.
       Default: "<source-bucket>"
       AllowedPattern : ".+"
+      
+    SnsName:
+      Type: String
+      Description: Name of the SNS ARN.
+      Default: "<SNS-ARN>"
 
   Conditions:
     publicBucket: !Equals [ !Ref AVBucketType, "public" ]
@@ -165,6 +170,7 @@
                 - "s3:GetObjectVersion"
                 - "s3:PutObjectTagging"
                 - "s3:PutObjectVersionTagging"
+                - "s3:DeleteObject"
               Resource:
                 - !Sub [ "arn:aws:s3:::${SourceBucketName}/*", { SourceBucketName: !Ref SourceBucket } ]
             - Sid: S3AVDefinitions
@@ -187,6 +193,7 @@
               Resource:
                 - "arn:aws:sns:::<av-scan-start>"
                 - "arn:aws:sns:::<av-status>"
+                - !Sub [ "arn:aws:sns:::${SNSName}/*", { SNSName: !Ref SnsName } ]
             - Sid: S3HeadObject
               Effect: Allow
               Action:
